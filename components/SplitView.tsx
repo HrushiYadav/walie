@@ -8,32 +8,28 @@ import { DownloadWallpaper } from "./BottomSheet"
 export function SplitView({wallpapers}:{
     wallpapers: Wallpaper []
 }) {
-    const [selectedWallpaper, setSelectedWallaper] = useState<null | Wallpaper>(null);
+    const [selectedWallpaper, setSelectedWallpaper] = useState<null | Wallpaper>(null);
     return <>
-     <ThemedView style={styles.container}>             
-            <ThemedView style={styles.innerContainer}>
-            <FlatList
-                data={wallpapers.filter((_, index) => index % 2 === 0)}
-                renderItem={({item}) => <View style={styles.imageContainer}>
-                <ImageCard onPress={() => {
-                setSelectedWallaper(item)
-                }} wallpaper={item}/></View>}
-                keyExtractor={item => item.name}
-                />
+        <FlatList
+            data={wallpapers.filter((_, index) => index % 2 === 0).map((_, index) => [wallpapers[index],wallpapers[index+1]])}
+            renderItem={({item :[first, second]}) =>    
+            <ThemedView style={styles.container}>             
+                <ThemedView style={styles.innerContainer}>
+                    <View style={styles.imageContainer}> <ImageCard onPress={() => {
+                    setSelectedWallpaper(first)
+                    }} wallpaper={first}/></View>
+                </ThemedView>
+                <ThemedView style={styles.innerContainer}>
+                {second && <View style={styles.imageContainer}> <ImageCard onPress={() => {
+                     setSelectedWallpaper(second)
+                 }} wallpaper={second}/></View>}
+                 </ThemedView>
             </ThemedView>
-            <ThemedView style={styles.innerContainer}>
-            <FlatList
-                data={wallpapers.filter((_, index) => index % 2 === 1)}
-                renderItem={({item}) => <View style={styles.imageContainer}>
-                <ImageCard onPress={() => {
-                setSelectedWallaper(item)
-                }} wallpaper={item}/></View>}
-                keyExtractor={item => item.name}
-                />
-            </ThemedView>
-    </ThemedView>
-    {selectedWallpaper && <DownloadWallpaper wallpaper={selectedWallpaper} onClose={() => setSelectedWallaper(null)}/>}
-    </>
+            }
+            keyExtractor={item=>item[0].name}
+            />
+        {selectedWallpaper && <DownloadWallpaper wallpaper={selectedWallpaper} onClose={() => setSelectedWallpaper(null)}/>}
+        </>
 }
 const styles = StyleSheet.create({
     container: {

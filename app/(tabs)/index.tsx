@@ -1,22 +1,34 @@
-import { DownloadWallpaper } from "@/components/BottomSheet";
-import { ImageCard } from "@/components/ImageCard";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { SplitView } from "@/components/SplitView";
-import { ThemedView } from "@/components/ThemedView";
-import { Wallpaper, useWallpapers } from "@/hooks/useWallpapers";
-import { Link } from "expo-router";
+import { SplitView ,} from "@/components/SplitView";
+import { useCarousel } from "@/hooks/useCarousel";
+import {useWallpapers } from "@/hooks/useWallpapers";
 import { useState } from "react";
-import { SafeAreaView,Text, View ,Image,StyleSheet} from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { SafeAreaView,StyleSheet, Dimensions, Text, Image} from "react-native";
+import Carousel from "react-native-reanimated-carousel";
+import { View } from "react-native-reanimated/lib/typescript/Animated";
+
 
 export default function explore (){
     const wallpapers = useWallpapers();
+    const width = Dimensions.get('window').width;
+    const [yOffset, setYOffset] = useState(0);
+    const carouselItems = useCarousel();
     return <SafeAreaView>      
-        <ParallaxScrollView headerBackgroundColor={{dark:"black",light:"white"}}
-         headerImage={<Image style={{flex: 1}} source={{uri: wallpapers[0]?.url ??""}}
-          />}>
-           <SplitView wallpapers={wallpapers}/>
-        </ParallaxScrollView>
+            <View style={{height: 300 - yOffset}}>
+                <Carousel
+                    width={width}
+                    height={300 - yOffset}
+                    data={carouselItems}
+                    onSnapToItem={(index)=> console.log('current index', index)}
+                    renderItem={({ index }) => (
+                        <View>
+                           <Image source ={{uri: carouselItems[index].image}} style={{height: 300}}/>
+                        </View>
+                    )}
+                />
+            </View>
+           <SplitView onScroll={(yOffset) =>{
+            setYOffset(yOffset)
+           }} wallpapers={wallpapers}/>
        
     </SafeAreaView>
 } 

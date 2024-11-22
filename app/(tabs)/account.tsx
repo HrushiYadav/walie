@@ -6,17 +6,37 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from '@/constants/Colors';
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-export  default function account (){
+import { ScrollView } from "react-native-gesture-handler";
 
+export  default function account () {
     return <SafeAreaView style={{flex:1}}>
+        <ScrollView style={{flex:1}}>
             <Header/>
             <ThemedView style={{flex:1}}>
                 <LoginButtons />   
                 <ThemeSelector/>       
+                <About/>
             </ThemedView>
-   
+        </ScrollView>
     </SafeAreaView>
 } 
+
+function About () {
+    return <ThemedView style={{paddingTop: 20}}>
+    <ThemedText style={styles.textBig}> About </ThemedText>
+        <ThemedView style={{marginTop: 10}}>
+            <Pressable>
+                <ThemedText style={{margin: 10, fontSize: 18}}> Account Details </ThemedText>
+            </Pressable>
+            <Pressable>
+                <ThemedText style={{margin: 10, fontSize: 18}}> Terms of Service </ThemedText>
+            </Pressable>
+            <Pressable>
+                <ThemedText style={{margin: 10, fontSize: 18}}> License</ThemedText>
+            </Pressable>
+        </ThemedView>
+    </ThemedView>
+}
 function ThemeSelector() {
     return <ThemedView style={{paddingTop: 20}}>
         <ThemedText style={styles.textBig}> Settings</ThemedText>

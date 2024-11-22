@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system'
 export const DownloadWallpaper = ({ onClose, wallpaper}:{
     onClose: ()=> void;
     wallpaper: Wallpaper;
@@ -35,6 +36,7 @@ export const DownloadWallpaper = ({ onClose, wallpaper}:{
               <Image style={styles.image} source ={{uri: wallpaper.url}}/>
               <View style={styles.topbar}>
                 <Ionicons
+                  onPress={onClose}
                   name={'close'}
                   size={24}
                   color={theme === 'light' ? Colors.light.icon : Colors.dark.text}          
@@ -56,16 +58,33 @@ export const DownloadWallpaper = ({ onClose, wallpaper}:{
               <ThemedView style={styles.textContainer}>
                 <ThemedText style={styles.text}>{wallpaper.name}</ThemedText>
               </ThemedView>
-              <DownloadButton/>
+              <DownloadButton url={wallpaper.url} />
             </ThemedView>
           </BottomSheetView>
         </BottomSheet>
   );
 };
 
-function DownloadButton() {
+function DownloadButton({url}: {url: string}) {
   const theme = useColorScheme() ?? 'light';
-  return <Pressable style={{
+  return <Pressable onPress={async () => {
+    let date = new Date().getTime();
+    let fileUri = FileSystem.documentDirectory + `${date}.jpg`;
+    try{
+      await FileSystem.downloadAsync(url,fileUri)
+      const response = await MediaLibrary.requestPermissionsAsync(true)
+    if(response.granted) {
+      MediaLibrary.createAssetAsync(fileUri)
+      alert("image downloaded")
+    }else{
+      console.error("permission not granted")
+    }
+    }
+    catch(e){
+      console.log("FS error",e);
+    }
+    
+  }} style={{
     backgroundColor: "black",
     padding:10,
     marginHorizontal: 40,

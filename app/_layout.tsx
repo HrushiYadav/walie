@@ -6,7 +6,7 @@ export default function Layout() {
         <Stack screenOptions={{
             headerShown:false
         }}>
-            <Stack.Screen name="account" options={{headerShown:true, headerTitle:"Account Info", headerBackTitle: "Go Back"}}/>
+            {/* <Stack.Screen name="account" options={{headerShown:true, headerTitle:"Account Info", headerBackTitle: "Go Back"}}/> */}
         </Stack>
     </GestureHandlerRootView>
 }
